@@ -1,6 +1,8 @@
 import axios from "./Index";
 
-export const login = (username, password) => {
+export const login = ({username, password}) => {
+  console.log(username);
+  console.log(password);
   return axios.post("login", { username, password });
 };
 

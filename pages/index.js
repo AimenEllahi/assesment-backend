@@ -1,15 +1,15 @@
-import dynamic from 'next/dynamic'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
-
-const DynamicLogin = dynamic(() => import('../Components/Login/Login'), {
-})
-
+import { useSelector } from 'react-redux'
+import { useRouter } from 'next/router'
 export default function Home() {
+  const router = useRouter()
+  const token = useSelector((state) => state.token)
+  if (!token) {
+    router.push("/auth/login")
+    return null;
+  }
   return (
     <div>
-      <DynamicLogin />
+      Home
     </div>
   )
 }

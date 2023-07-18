@@ -1,10 +1,13 @@
 import React from "react";
+import { useRouter } from "next/router";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { toast } from "react-toastify";
 import { login } from "@/Api/Login";
 import { useDispatch } from "react-redux";
 import { login as reduxLogin } from "@/Store/Slice/TokenSlice";
+
 function Login() {
+  const router = useRouter();
   const dispatch = useDispatch();
   const handleFormSubmit = (values, actions) => {
     // Handle form submission logic here
@@ -13,8 +16,10 @@ function Login() {
     login(values)
       .then((res) => {
         console.log(res.data);
-        //dispatch(reduxLogin(res.data.token));
+        dispatch(reduxLogin(res.data.token));
         toast("Login Successful", { type: "success" });
+        //redirect to dashboard
+        router.push("/appointments");
       })
       .catch((err) => {
         console.log(err);
