@@ -35,6 +35,7 @@ function AppointmentCalender() {
       className='flex justify-center bg-white'
       style={{
         height: "85vh",
+        width: "100%"
       }}
     >
       <table className='rounded border-collapse w-full mx-20 my-20'>
