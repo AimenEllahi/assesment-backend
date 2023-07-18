@@ -1,10 +1,35 @@
-import React from "react";
+import React,{useEffect} from "react";
 import { HiOutlineRefresh } from "react-icons/hi";
 import TableComponent from "../Table/TableComponent";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { getAppointments } from "@/Api/Appointments";
+import { refreshToken } from "@/Api/Login";
+import { toast } from "react-toastify";
 
 function AppointmentCalender() {
+  const token = useSelector((state) => state.token)
+  console.log("token here", token)
+  useEffect(() => {
+    getAppointments(token).then((res)=>{
+      console.log(res.data);
+    }).catch((err) =>{
+      console.log(err);
+    })
+  }, [token]);
+
+  //to handle refresh
+  const handleRefresh = () => {
+    refreshToken(token).then((res)=>{
+      console.log(res.data);
+      toast("Refreshing data", {type: "success"})
+    }).catch((err) =>{
+      console.log(err);
+      toast("Refreshing Failed", { type: "error" });
+    })
+  }
+
+
   return (
     <div
       className='flex justify-center bg-white'
@@ -17,6 +42,7 @@ function AppointmentCalender() {
           <tr>
             <th className='p-2 border border-gray-300 font-bold'>
               <HiOutlineRefresh
+                onClick={handleRefresh}
                 className='w-5 h-5 mr-1 inline-block object-contain'
                 color='green'
               />
