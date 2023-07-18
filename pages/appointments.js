@@ -8,7 +8,7 @@ const DynamicNavbar = dynamic(() => import('../components/Navigation/Navbar'), {
 
 const DynamicTable = dynamic(() => import ("../components/Appointments/AppointmentCalender"))
 
-//const DynamicCalender = dynamic(() => import ("../components/Table/TableComponent"))
+const DynamicCalender = dynamic(() => import ("../components/Table/Schedular"))
 
 export default function Appointments() {
   return (
