@@ -63,7 +63,8 @@ function Login() {
                 id='username'
                 name='username'
                 placeholder='Enter your username'
-                className='w-full p-2 border-b-2 border-black rounded-t focus:border-green-600 focus:outline-none'
+                className='w-full p-2 border-b-2 border-black rounded-b focus:border-green-600 focus:outline-none'
+             
               />
               <ErrorMessage
                 name='username'
@@ -92,7 +93,7 @@ function Login() {
 
             <button
               type='submit'
-              className='w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700'
+              className='w-full text-white py-2 px-4 rounded-lg hover:bg-green-700 bg-[#0AA36E]'
             >
               Sign In
             </button>

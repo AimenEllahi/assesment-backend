@@ -35,17 +35,17 @@ function AppointmentCalender() {
       className='flex justify-center bg-white'
       style={{
         height: "85vh",
-        width: "100%"
+        overflowX: "auto"
       }}
     >
-      <table className='rounded border-collapse w-full mx-20 my-20'>
+      <table className='border-collapse rounded-lg w-full mx-20 my-20'>
         <thead>
           <tr>
             <th className='p-2 border border-gray-300 font-bold'>
               <HiOutlineRefresh
                 onClick={handleRefresh}
                 className='w-5 h-5 mr-1 inline-block object-contain'
-                color='green'
+                color='#0AA36E'
               />
             </th>
             <th className='p-2 border border-gray-300 font-bold text-center'>
