@@ -1,169 +1,94 @@
-import React,{useEffect} from "react";
+import React, { useEffect, useState } from "react";
 import { HiOutlineRefresh } from "react-icons/hi";
-import TableComponent from "../Table/TableComponent";
+import { days, timeSlots } from "@/constants/constants";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { getAppointments } from "@/Api/Appointments";
 import { refreshToken } from "@/Api/Login";
 import { toast } from "react-toastify";
+import AppointmentCard from "./AppointmentCard";
 
 function AppointmentCalender() {
-  const token = useSelector((state) => state.token)
-  console.log("token here", token)
+  const token = useSelector((state) => state.token);
+  const [appointments, setAppointments] = useState([]);
+
   useEffect(() => {
-    getAppointments(token).then((res)=>{
-      console.log(res.data);
-    }).catch((err) =>{
-      console.log(err);
-    })
+    if (token)
+      getAppointments(token)
+        .then((res) => {
+          setAppointments(
+            Object.values(res.data).reduce((acc, item) => [...acc, item], [])
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+          toast("There was some error while retrieveing appointments", {
+            type: "error",
+            //show only once
+            toastId: "error",
+          });
+        });
   }, [token]);
 
   //to handle refresh
   const handleRefresh = () => {
-    refreshToken(token).then((res)=>{
-      console.log(res.data);
-      toast("Refreshing data", {type: "success"})
-    }).catch((err) =>{
-      console.log(err);
-      toast("Refreshing Failed", { type: "error" });
-    })
-  }
-
+    refreshToken(token)
+      .then((res) => {
+        console.log(res.data);
+        toast("Data Refreshed", { type: "success" });
+      })
+      .catch((err) => {
+        console.log(err);
+        toast("Refreshing Failed", { type: "error" });
+      });
+  };
 
   return (
-    <div
-      className='flex justify-center bg-white'
-      style={{
-        height: "85vh",
-        overflowX: "auto"
-      }}
-    >
-      <table className='border-collapse rounded-lg w-full mx-20 my-20'>
+    <div className='flex justify-center  bg-white flex-col'>
+      <table className='rounded border-collapse  mx-20 my-20'>
         <thead>
           <tr>
-            <th className='p-2 border border-gray-300 font-bold'>
+            <th className='p-2 border cursor-pointer border-gray-300 font-bold'>
               <HiOutlineRefresh
                 onClick={handleRefresh}
                 className='w-5 h-5 mr-1 inline-block object-contain'
                 color='#0AA36E'
               />
             </th>
-            <th className='p-2 border border-gray-300 font-bold text-center'>
-              Monday
-            </th>
-            <th className='p-2 border border-gray-300 font-bold text-center'>
-              Tuesday
-            </th>
-            <th className='p-2 border border-gray-300 font-bold text-center'>
-              Wednesday
-            </th>
-            <th className='p-2 border border-gray-300 font-bold text-center'>
-              Thursday
-            </th>
-            <th className='p-2 border border-gray-300 font-bold text-center'>
-              Friday
-            </th>
-            <th className='p-2 border border-gray-300 font-bold text-center'>
-              Saturday
-            </th>
-            <th className='p-2 border border-gray-300 font-bold text-center'>
-              Sunday
-            </th>
+            {days.map((day) => (
+              <th className='p-2 border border-gray-300 font-bold text-center'>
+                {day}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td className='p-2 border border-gray-300 font-bold text-center'>
-              8 AM
-            </td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className="p-2 border border-gray-300 relative">
-            <TableComponent />
-            </td>
+          {timeSlots.map((time) => (
+            <tr>
+              <td className='p-2 border border-gray-300 font-bold text-center'>
+                {time}
+              </td>
+              {days.map((day) => {
+                const matchingAppointments = appointments.filter(
+                  (appointment) =>
+                    appointment.weekDay === day &&
+                    appointment.startTimeFormatted === time
+                );
 
-
-            <td className='p-2 border border-gray-300'></td>
-
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            {/* <td className='p-2 border border-gray-300'></td> */}
-          </tr>
-          <tr>
-            <td className='p-2 border border-gray-300 font-bold text-center'>
-              9 AM
-            </td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-          </tr>
-          <tr>
-            <td className='p-2 border border-gray-300 font-bold text-center'>
-              10 AM
-            </td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-          </tr>
-          <tr>
-            <td className='p-2 border border-gray-300 font-bold text-center'>
-              11 AM
-            </td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-          </tr>
-          <tr>
-            <td className='p-2 border border-gray-300 font-bold text-center'>
-              12 PM
-            </td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300 relative'>
-            <TableComponent />
-            </td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-          </tr>
-          <tr>
-            <td className='p-2 border border-gray-300 font-bold text-center'>
-              1 PM
-            </td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-          </tr>
-          <tr>
-            <td className='p-2 border border-gray-300 font-bold text-center'>
-              2 PM
-            </td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-            <td className='p-2 border border-gray-300'></td>
-          </tr>
+                return (
+                  <td className='h-[100px] border relative  border-gray-300 font-bold  '>
+                    {matchingAppointments.length > 0 &&
+                      matchingAppointments.map((appointment, index) => (
+                        <AppointmentCard
+                          appointment={appointment}
+                          index={index}
+                        />
+                      ))}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
